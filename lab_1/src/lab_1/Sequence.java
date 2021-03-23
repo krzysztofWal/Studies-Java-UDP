@@ -29,6 +29,7 @@ public abstract class Sequence<T> extends Pakcet{
 				"\nUnit :" + this.unit +
 				"\nResolution : " + this.resolution +
 				"\n";
+		
 	}
 
 }
