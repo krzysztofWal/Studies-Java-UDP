@@ -25,4 +25,12 @@ public class TimeHistory<T> extends Sequence<T>{
 				buffer);
 		this.sensitivity = sensitivity;
 	}
+	
+	
+	@Override 
+	public String toString() { 
+		return super.toString() + "Sensitivity: " + sensitivity + "\n" + dataToString();
+		
+	}
+	
 }

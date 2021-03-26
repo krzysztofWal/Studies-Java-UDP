@@ -20,8 +20,9 @@ public abstract class Pakcet {
 	@Override
 	public String toString() {
 		return "Device : " + this.device +
-				"\nDescription :" + this.description +
-				"\nDate : " + this.date;
+				"\nDescription : " + this.description +
+				"\nDate : " + this.date +
+				"\n";
 	}
 	
 	

@@ -19,4 +19,20 @@ public class Alarm<T> extends Pakcet {
 		this.direction = direction;
 	}
 	
+	@Override 
+	public String toString() { 
+		String temp = super.toString() + "Channel Nr: " + channelNr + "\nThreshold: " + threshold + "\nDirection: ";
+		if (direction == 0) {
+			temp += "Up or down";
+		} else if (direction == 1) {
+			temp += "Up";
+		} else if (direction == -1) {
+			temp += "Down";
+		} else {
+			temp += "Unknown direction";
+		}
+		return temp + "\n";
+		}
+	
+	
 }
