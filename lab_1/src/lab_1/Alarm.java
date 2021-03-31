@@ -1,6 +1,6 @@
 package lab_1;
 
-public class Alarm<T> extends Pakcet {
+public class Alarm<T> extends Packet {
 	private int channelNr;
 	private T threshold;
 	private int direction; // 0 - dowolny, -1 - w dó³, 1 - w górê

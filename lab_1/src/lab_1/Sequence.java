@@ -1,6 +1,6 @@
 package lab_1;
 
-public abstract class Sequence<T> extends Pakcet{
+public abstract class Sequence<T> extends Packet{
 	protected int channelNr;
 	protected String unit;
 	protected double resolution;

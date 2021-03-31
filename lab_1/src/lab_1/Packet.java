@@ -1,17 +1,19 @@
 package lab_1;
 
-public abstract class Pakcet {
+import java.io.Serializable;
+
+public abstract class Packet implements Serializable {
 	protected String device;
 	protected String description;
 	protected long date;
 	
-	public Pakcet() {
+	public Packet() {
 		device = "not given";
 		description = "not given";
 		date = 0;
 	}
 	
-	public Pakcet(String device, String description, long date) {
+	public Packet(String device, String description, long date) {
 		this.device = device;
 		this.description = description;
 		this.date = date;
