@@ -5,7 +5,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lab_1.TimeHistory;
@@ -18,7 +17,7 @@ public class UdpClient {
 		 * Tworzenie pustego Socketa i skanera
 		 */
 		DatagramSocket aSocket = null;
-		Scanner scanner = null;
+		
 		try {
 			/*
 			 * nie przekazano argumentu 
@@ -45,8 +44,6 @@ public class UdpClient {
 			 * a socket to nowy DatagramSocket() u¿ywaj¹cy dowolnego portu
 			 */
 			aSocket = new DatagramSocket();
-			//scanner = new Scanner(System.in);
-			//String line = "";
 			
 			Double[] doubleData = {1.3, 1.4, 1.5, 1.4, 1.3};
 			TimeHistory<Double[]> packet = new TimeHistory("First device",
@@ -61,38 +58,23 @@ public class UdpClient {
 
 			byte[] data = Tools.serialize(packet);
 			
-			//while (true) {
-				/*
-				 * wpisz swoj¹ wiadomoœæ
-				 */
-			//	System.out.println("Enter your message: ");
-				/* 
-				 * wpisano linijkê
-				 */
-			//	if (scanner.hasNextLine())
-			//		line = scanner.nextLine();
-				/*
-				 * utworzenie nowego pakietu i wys³anie go do wczeœniej przypisanego hosta i nru portu (hardcoded)
-				 */
-			//	DatagramPacket request = new DatagramPacket(line.getBytes(), line.length(), aHost, serverPort);
-			//	aSocket.send(request);
+			/*
+			 * utworzenie nowego pakietu i wys³anie go do wczeœniej przypisanego hosta i nru portu (hardcoded)
+			 */
+			DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
+			aSocket.send(toSend);
+			/*
+			 * odbierz odpowiedz i ja wyswietl
+			 */
+			DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+			aSocket.receive(reply);
+			try {
+			Packet read = (Packet)Tools.deserialize(reply.getData());
+			System.out.println(read);
+			} catch (ClassNotFoundException ex) {
+				Logger.getLogger(UdpClient.class.getName()).log(Level.FINEST, null, ex);
+			}
 				
-				DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
-				aSocket.send(toSend);
-				/*
-				 * odbierz odpowiedz i ja wyswietl
-				 */
-				DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-				aSocket.receive(reply);
-				try {
-				Packet read = (Packet)Tools.deserialize(reply.getData());
-				System.out.println(read);
-				} catch (ClassNotFoundException ex) {
-					Logger.getLogger(UdpClient.class.getName()).log(Level.FINEST, null, ex);
-				}
-				
-			//	System.out.println("Reply: " + new String(reply.getData(), 0, reply.getLength()));
-			//}
 		} catch (SocketException ex) {
 			Logger.getLogger(UdpClient.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (UnknownHostException ex) {

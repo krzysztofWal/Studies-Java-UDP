@@ -3,7 +3,6 @@ package udp;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +40,7 @@ public class UdpServer {
 	          /*
 	           * wypisz otrzyman¹ wiadomoœæ
 	           */
-	          System.out.println("Received: " + t);
+	          //System.out.println("Received: " + t);
 	          /*
 	           * wys³anie odpowiedzi na port z którego zosta³ odebrany
 	           */
