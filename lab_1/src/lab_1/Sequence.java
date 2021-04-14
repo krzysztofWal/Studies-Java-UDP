@@ -1,6 +1,10 @@
 package lab_1;
 
-public abstract class Sequence<T> extends Packet{
+public abstract class Sequence<T> extends Request{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8733023938472258079L;
 	protected int channelNr;
 	protected String unit;
 	protected double resolution;
@@ -28,6 +32,10 @@ public abstract class Sequence<T> extends Packet{
 		}
 	}
 	
+	public void makeWriteRequest() {
+		this.type = Operation.WRITE;
+	}
+	
 	protected String dataToString() {
 		String temp = "Data :\n";
 		byte counter = 0;
@@ -42,6 +50,7 @@ public abstract class Sequence<T> extends Packet{
 		}
 		return temp;
 	}
+	
 	
 	@Override
 	public String toString() {

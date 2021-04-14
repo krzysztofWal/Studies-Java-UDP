@@ -83,7 +83,6 @@ public class UdpClient {
 			Logger.getLogger(UdpClient.class.getName()).log(Level.SEVERE, null, ex);
 		} finally {
 			aSocket.close();
-		//	scanner.close();
 		}
 	}
 }

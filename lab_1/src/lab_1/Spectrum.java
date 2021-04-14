@@ -1,6 +1,10 @@
 package lab_1;
 
 public class Spectrum<T> extends Sequence<T> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7536016929298163009L;
 	private String scaling;
 
 	public Spectrum() {
@@ -28,5 +32,9 @@ public class Spectrum<T> extends Sequence<T> {
 	
 	@Override 
 	public String toString() { return super.toString() + "Scaling: " + scaling + "\n" + dataToString();}
-
+	
+	@Override
+	public String className() {
+		return "Spectrum";
+	}
 }

@@ -1,6 +1,10 @@
 package lab_1;
 
 public class TimeHistory<T> extends Sequence<T>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8587357986859665808L;
 	private double sensitivity;
 	
 	public TimeHistory() {
@@ -26,11 +30,14 @@ public class TimeHistory<T> extends Sequence<T>{
 		this.sensitivity = sensitivity;
 	}
 	
-	
 	@Override 
 	public String toString() { 
 		return super.toString() + "Sensitivity: " + sensitivity + "\n" + dataToString();
-		
+	}
+	
+	@Override
+	public String className() {
+		return "Time History";
 	}
 	
 }

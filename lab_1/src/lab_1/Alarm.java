@@ -1,6 +1,10 @@
 package lab_1;
 
-public class Alarm<T> extends Packet {
+public class Alarm<T> extends Request{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7603134955851482488L;
 	private int channelNr;
 	private T threshold;
 	private int direction; // 0 - dowolny, -1 - w dó³, 1 - w górê
@@ -34,5 +38,13 @@ public class Alarm<T> extends Packet {
 		return temp + "\n";
 		}
 	
+	public void makeWriteRequest() {
+		this.type = Operation.WRITE;
+	}
+	
+	@Override
+	public String className() {
+		return "Alarm";
+	}
 	
 }
