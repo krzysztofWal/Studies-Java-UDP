@@ -33,7 +33,7 @@ public class UdpClientVersionTwo {
 			aSocket = new DatagramSocket();
 			
 			//wys³anie ¿¹dania
-			Request rq = Request.newReadRequest("First device", "First description", Tools.toTimestamp(0,0,0,1,Calendar.JUNE, 2019));
+			Request rq = Request.newReadRequest("First device", "First description", Tools.toTimestamp(0,0,0,1,Calendar.JUNE, 2019), 12);
 		 	byte[] data = Tools.serialize(rq);
 			DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
 			aSocket.send(toSend);
@@ -92,23 +92,19 @@ class ClientSubroutine extends BasicThread {
 	protected static void waitAndReceive() throws IOException, ClassNotFoundException, SocketTimeoutException  {
 		byte[] temp = new byte[2048];
 		DatagramPacket tempPack = new DatagramPacket(temp, temp.length);
-		System.out.println("Nowe wywo³anie");
-		try {
-			aSocket.receive(tempPack);
-				if (Tools.deserialize(temp).toString().contains("Device")) {
-					System.out.println("Dane odebrane");
-					data = temp;
-					dataSet = true;
-				} else {
-					for (int i = 0; i < 1024; i++) {
-						list[i] = temp[i];
-					}
-					listSet = true;
-					System.out.println("Lista odebrana");
-				}	
-		} catch (SocketTimeoutException ex) {
-			throw new SocketTimeoutException();
-		}
+//		System.out.println("Nowe wywo³anie");
+		aSocket.receive(tempPack);
+			if (Tools.deserialize(temp).toString().contains("Device")) {
+//				System.out.println("Dane odebrane");
+				data = temp;
+				dataSet = true;
+			} else {
+				for (int i = 0; i < 1024; i++) {
+					list[i] = temp[i];
+				}
+				listSet = true;
+//				System.out.println("Lista odebrana");
+			}	
 	}
 	
 	//przypisz socket na którym operowaæ bêd¹ w¹tki podklas ClientSubroutine

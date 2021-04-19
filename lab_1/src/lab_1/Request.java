@@ -7,6 +7,7 @@ public class Request extends Packet{
 	private static final long serialVersionUID = -714564125246870672L;
 	protected Operation type; 
 	protected long endingDate = 0;
+	protected int ID;
 	
 	protected Request() {
 		super();
@@ -16,24 +17,26 @@ public class Request extends Packet{
 		super(device, description, date);
 	}
 	
-	protected Request(Operation type, String device, String description, long date) {
+	protected Request(Operation type, String device, String description, long date, int ID) {
 		super(device, description, date);
 		this.type = type;
+		this.ID = ID;
 	}
 	
-	protected Request(Operation type, String device, String description, long beginningDate, long endingDate) {
+	protected Request(Operation type, String device, String description, long beginningDate, long endingDate, int ID) {
 		super(device, description, beginningDate);
 		this.endingDate = endingDate;
 		this.type = type;
+		this.ID = ID;
 	}
 	
-	public static Request newReadRequest(String device, String description, long date) {
-		Request obj = new Request(Operation.READ, device, description, date);
+	public static Request newReadRequest(String device, String description, long date, int ID) {
+		Request obj = new Request(Operation.READ, device, description, date, ID);
 		return obj;
 	}
 	
-	public static Request newReadRequest(String device, String description, long beginningDate, long endingDate) {
-		Request obj = new Request(Operation.READ, device, description, beginningDate, endingDate);
+	public static Request newReadRequest(String device, String description, long beginningDate, long endingDate, int ID) {
+		Request obj = new Request(Operation.READ, device, description, beginningDate, endingDate, ID);
 		return obj;
 	}
 	
@@ -57,6 +60,10 @@ public class Request extends Packet{
 	
 	public long getEndingDate() {
 		return endingDate;
+	}
+	
+	public int getID() {
+		return ID;
 	}
 	
 	public String className() {

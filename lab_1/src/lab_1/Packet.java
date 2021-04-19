@@ -45,5 +45,4 @@ public abstract class Packet implements Serializable {
 	}
 	
 	
-	
 }
