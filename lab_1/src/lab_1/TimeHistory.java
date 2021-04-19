@@ -30,6 +30,7 @@ public class TimeHistory<T> extends Sequence<T>{
 		this.sensitivity = sensitivity;
 	}
 	
+	
 	@Override 
 	public String toString() { 
 		return super.toString() + "Sensitivity: " + sensitivity + "\n" + dataToString();
@@ -39,5 +40,7 @@ public class TimeHistory<T> extends Sequence<T>{
 	public String className() {
 		return "Time History";
 	}
+	
+	
 	
 }

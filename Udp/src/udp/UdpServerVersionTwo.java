@@ -24,7 +24,7 @@ public class UdpServerVersionTwo {
 
 	        while(true) {
 	        	DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-	        	System.out.println("Waiting for request...");
+	        //	System.out.println("Waiting for request...");
 	        	// czekaj na ¿¹danie od klienta
 	        	aSocket.receive(request);
 	        	try {
@@ -59,7 +59,7 @@ public class UdpServerVersionTwo {
 		  	          	aSocket.send(reply); 
 		  	          	if (!objVec.isEmpty()) {
 		  	          	// jeœli znaleziono szukane dane
-	        				System.out.println("Server: Sending list and found data matching your requiry");
+	        	//			System.out.println("Server: Sending list and found data matching your requiry");
 	        				// wyœlij znalezione dane
 	        				byte[] data = Tools.serialize(objVec);
 	        				DatagramPacket dataPack = new DatagramPacket(data, data.length, 
@@ -91,3 +91,13 @@ public class UdpServerVersionTwo {
 	      
 	    }
 }
+
+ class ServerSaveRoutine extends Thread {
+	public ServerSaveRoutine() {
+		
+	}
+}
+ 
+ class ServerReadRoutine extends Thread {
+ 
+ }
