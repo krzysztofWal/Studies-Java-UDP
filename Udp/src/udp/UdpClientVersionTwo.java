@@ -38,12 +38,8 @@ public class UdpClientVersionTwo {
 			DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
 			aSocket.send(toSend);
 			System.out.println("Klient: Wys³ano pakiet");
-			//oczekiwanie na odpowiedz
-		//	DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-		//	aSocket.receive(reply);
-			//odczytanie odpowiedzi
-		//	System.out.println("Klient: Odebrano odpowiedz od serwera");
 			try {
+				//wyslano zapytanie o odczytanie danych
 				if(rq.getType() == Request.Operation.READ) {
 					
 					ClientReceiveListSubroutine threadOne = new ClientReceiveListSubroutine("ListThread");
@@ -87,23 +83,19 @@ class ClientSubroutine extends BasicThread {
 	protected static byte[] data = new byte[2048];
 	protected static boolean listSet, dataSet;
 	protected static DatagramSocket aSocket;
-	protected static int mutex = 0;
-	
 	protected ClientSubroutine(String descr) {
 		super(descr);
 	}
 
 	// czekaj na pakiet od servera (z timeoutem) i jeœli nadejdzie zapisz go do odpowiedniego pola - tablicy danych
 	protected static void waitAndReceive() throws IOException, ClassNotFoundException, SocketTimeoutException  {
-		mutex = 1;
 		byte[] temp = new byte[2048];
 		DatagramPacket tempPack = new DatagramPacket(new byte[2048], 2048);
 		tempPack.setData(temp);
-		System.out.println("Nowe wywo³anie");
-		try {
+//		System.out.println("Nowe wywo³anie");
 			aSocket.receive(tempPack);
 				if (Tools.deserialize(temp).toString().contains("Device")) {
-					System.out.println("Dane odebrane");
+//					System.out.println("Dane odebrane");
 					data = temp;
 					dataSet = true;
 				} else {
@@ -111,13 +103,9 @@ class ClientSubroutine extends BasicThread {
 						list[i] = temp[i];
 					}
 					listSet = true;
-					System.out.println("Lista odebrana");
+//					System.out.println("Lista odebrana");
 				}	
-			mutex = 0;
-		} catch (SocketTimeoutException ex) {
-			mutex = 0;
-			throw new SocketTimeoutException();
-		}
+
 	}
 	
 	//przypisz socket na którym operowaæ bêd¹ w¹tki podklas ClientSubroutine
@@ -139,24 +127,15 @@ final class ClientReceiveListSubroutine extends ClientSubroutine{
 		try {	
 			while (!listSet) {
 				//czekaj na nadchodzacy pakiet i jeœli jakiœ nadejdzie to wpisz go jako odpowiedni
-				
-					try {
-						synchronized(this) {
-						System.out.println(this.getName());
-					//	if (mutex == 0) {
-							ClientSubroutine.waitAndReceive();
-					//	}
-						}
-					//jeœli w tym czasie pakiet nie nadejdzie, ¿eby nie "zapychaæ w¹tku", zrezygnuj
-					} catch (SocketTimeoutException ex) {
-						//ClientReceiveDataSubroutine.yield();
+				try {
+					synchronized(this) {
+						//System.out.println(this.getName());
+						ClientSubroutine.waitAndReceive();
 					}
-				
+				//jesli w tym czasie pakiet nie nadejdzie, zeby nie "zapychac watku", zrezygnuj
+				} catch (SocketTimeoutException ex) {}
 			}
-			
-			
 			List<String> read = (List<String>)Tools.deserialize(ClientSubroutine.list);
-			
 			if (read.size() != 0) {
 				//jeœli lista nie jest pusta
 				// wypisz wiersze listy
@@ -185,22 +164,18 @@ final class ClientReceiveDataSubroutine extends ClientSubroutine{
 	
 	@Override
 	public void run() {
-		//jeœli pakiet nie jest odebrany
+		//jesli pakiet nie jest odebrany
 		try {
 
 			while (!dataSet) {
-				//czekaj na nadchodzacy pakiet i jeœli jakiœ nadejdzie to wpisz go jako odpowiedni
+				//czekaj na nadchodzacy pakiet i jesli jakiœ nadejdzie to wpisz go jako odpowiedni
 				try {
 					synchronized(this) {
-					System.out.println(this.getName());
-				//	if (mutex == 0 ) {
-						ClientSubroutine.waitAndReceive();
-			//		}
+					//System.out.println(this.getName());
+					ClientSubroutine.waitAndReceive();
 					}
-				//jeœli w tym czasie pakiet nie nadejdzie, ¿eby nie "zapychaæ w¹tku", zrezygnuj
-				} catch (SocketTimeoutException ex) {
-					//ClientReceiveDataSubroutine.yield();
-				}
+				//jesli w tym czasie pakiet nie nadejdzie, ¿eby nie "zapychac watku", zrezygnuj
+				} catch (SocketTimeoutException ex) {}
 			}
 			Vector<Request> dataVec = (Vector<Request>) Tools.deserialize(ClientSubroutine.data);
 			
@@ -219,12 +194,3 @@ final class ClientReceiveDataSubroutine extends ClientSubroutine{
 		}
 	}
 }
-
-/*
- * class MySocketException extends SocketTimeoutException { private static final
- * long serialVersionUID = -1205821723257911821L; private int mutex;
- * 
- * public MySocketException()) { super(); }
- * 
- * }
- */
