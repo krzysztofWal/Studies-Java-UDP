@@ -90,8 +90,7 @@ class ClientSubroutine extends BasicThread {
 	// czekaj na pakiet od servera (z timeoutem) i jeœli nadejdzie zapisz go do odpowiedniego pola - tablicy danych
 	protected static void waitAndReceive() throws IOException, ClassNotFoundException, SocketTimeoutException  {
 		byte[] temp = new byte[2048];
-		DatagramPacket tempPack = new DatagramPacket(new byte[2048], 2048);
-		tempPack.setData(temp);
+		DatagramPacket tempPack = new DatagramPacket(temp, temp.length);
 //		System.out.println("Nowe wywo³anie");
 			aSocket.receive(tempPack);
 				if (Tools.deserialize(temp).toString().contains("Device")) {
@@ -137,8 +136,7 @@ final class ClientReceiveListSubroutine extends ClientSubroutine{
 			}
 			List<String> read = (List<String>)Tools.deserialize(ClientSubroutine.list);
 			if (read.size() != 0) {
-				//jeœli lista nie jest pusta
-				// wypisz wiersze listy
+				//jeœli lista nie jest pusta, wypisz wiersze listy
 				synchronized(this) {
 					System.out.println("Klient: Znaleziono dane z pomiarów:");
 					for (Object el : read.toArray()) {
@@ -146,7 +144,6 @@ final class ClientReceiveListSubroutine extends ClientSubroutine{
 					}
 				}
 			}
-			
 		} catch (IOException ex) {
 			Logger.getLogger(ClientReceiveListSubroutine.class.getName()).log(Level.FINEST, null, ex);
 			System.out.println("Klient: " + this.getName() + ": B³¹d przy odbiorze danych z serwera");
@@ -178,13 +175,11 @@ final class ClientReceiveDataSubroutine extends ClientSubroutine{
 				} catch (SocketTimeoutException ex) {}
 			}
 			Vector<Request> dataVec = (Vector<Request>) Tools.deserialize(ClientSubroutine.data);
-			
 			synchronized (this) {
 				if (dataVec.size() != 0) {
 					System.out.println("Klient: Iloœæ pomiarów, z których otrzymano dane: " + dataVec.size());
 				}
 			}
-			
 		} catch (IOException ex) {
 			Logger.getLogger(ClientReceiveDataSubroutine.class.getName()).log(Level.FINEST, null, ex);
 			System.out.println("Klient: " + this.getName() + ": B³¹d przy odbiorze danych z serwera");
