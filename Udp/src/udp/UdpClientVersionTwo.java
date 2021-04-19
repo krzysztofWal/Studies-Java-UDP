@@ -38,12 +38,8 @@ public class UdpClientVersionTwo {
 			DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
 			aSocket.send(toSend);
 			System.out.println("Klient: Wys³ano pakiet");
-			//oczekiwanie na odpowiedz
-		//	DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-		//	aSocket.receive(reply);
-			//odczytanie odpowiedzi
-		//	System.out.println("Klient: Odebrano odpowiedz od serwera");
 			try {
+				// wys³ano ¿¹danie odczytu
 				if(rq.getType() == Request.Operation.READ) {
 					
 					ClientReceiveListSubroutine threadOne = new ClientReceiveListSubroutine("ListThread");
@@ -87,7 +83,6 @@ class ClientSubroutine extends BasicThread {
 	protected static byte[] data = new byte[2048];
 	protected static boolean listSet, dataSet;
 	protected static DatagramSocket aSocket;
-	protected static int mutex = 0;
 	
 	protected ClientSubroutine(String descr) {
 		super(descr);
@@ -95,10 +90,8 @@ class ClientSubroutine extends BasicThread {
 
 	// czekaj na pakiet od servera (z timeoutem) i jeœli nadejdzie zapisz go do odpowiedniego pola - tablicy danych
 	protected static void waitAndReceive() throws IOException, ClassNotFoundException, SocketTimeoutException  {
-		mutex = 1;
 		byte[] temp = new byte[2048];
-		DatagramPacket tempPack = new DatagramPacket(new byte[2048], 2048);
-		tempPack.setData(temp);
+		DatagramPacket tempPack = new DatagramPacket(temp, temp.length);
 		System.out.println("Nowe wywo³anie");
 		try {
 			aSocket.receive(tempPack);
@@ -113,9 +106,7 @@ class ClientSubroutine extends BasicThread {
 					listSet = true;
 					System.out.println("Lista odebrana");
 				}	
-			mutex = 0;
 		} catch (SocketTimeoutException ex) {
-			mutex = 0;
 			throw new SocketTimeoutException();
 		}
 	}
@@ -138,28 +129,18 @@ final class ClientReceiveListSubroutine extends ClientSubroutine{
 		//jeœli pakiet nie jest odebrany
 		try {	
 			while (!listSet) {
-				//czekaj na nadchodzacy pakiet i jeœli jakiœ nadejdzie to wpisz go jako odpowiedni
-				
-					try {
-						synchronized(this) {
+				//czekaj na nadchodzacy pakiet i jeœli jakiœ nadejdzie to wpisz go jako odpowiedni				
+				try {
+					synchronized(this) {
 						System.out.println(this.getName());
-					//	if (mutex == 0) {
-							ClientSubroutine.waitAndReceive();
-					//	}
-						}
-					//jeœli w tym czasie pakiet nie nadejdzie, ¿eby nie "zapychaæ w¹tku", zrezygnuj
-					} catch (SocketTimeoutException ex) {
-						//ClientReceiveDataSubroutine.yield();
+						ClientSubroutine.waitAndReceive();
 					}
-				
+				//jeœli w tym czasie pakiet nie nadejdzie, ¿eby nie "zapychaæ w¹tku", zrezygnuj
+				} catch (SocketTimeoutException ex) {}
 			}
-			
-			
 			List<String> read = (List<String>)Tools.deserialize(ClientSubroutine.list);
-			
 			if (read.size() != 0) {
-				//jeœli lista nie jest pusta
-				// wypisz wiersze listy
+				//jeœli lista nie jest pusta, wypisz wiersze listy
 				synchronized(this) {
 					System.out.println("Klient: Znaleziono dane z pomiarów:");
 					for (Object el : read.toArray()) {
@@ -167,7 +148,6 @@ final class ClientReceiveListSubroutine extends ClientSubroutine{
 					}
 				}
 			}
-			
 		} catch (IOException ex) {
 			Logger.getLogger(ClientReceiveListSubroutine.class.getName()).log(Level.FINEST, null, ex);
 			System.out.println("Klient: " + this.getName() + ": B³¹d przy odbiorze danych z serwera");
@@ -193,23 +173,18 @@ final class ClientReceiveDataSubroutine extends ClientSubroutine{
 				try {
 					synchronized(this) {
 					System.out.println(this.getName());
-				//	if (mutex == 0 ) {
 						ClientSubroutine.waitAndReceive();
-			//		}
 					}
 				//jeœli w tym czasie pakiet nie nadejdzie, ¿eby nie "zapychaæ w¹tku", zrezygnuj
 				} catch (SocketTimeoutException ex) {
-					//ClientReceiveDataSubroutine.yield();
 				}
 			}
 			Vector<Request> dataVec = (Vector<Request>) Tools.deserialize(ClientSubroutine.data);
-			
 			synchronized (this) {
 				if (dataVec.size() != 0) {
 					System.out.println("Klient: Iloœæ pomiarów, z których otrzymano dane: " + dataVec.size());
 				}
 			}
-			
 		} catch (IOException ex) {
 			Logger.getLogger(ClientReceiveDataSubroutine.class.getName()).log(Level.FINEST, null, ex);
 			System.out.println("Klient: " + this.getName() + ": B³¹d przy odbiorze danych z serwera");
@@ -220,11 +195,3 @@ final class ClientReceiveDataSubroutine extends ClientSubroutine{
 	}
 }
 
-/*
- * class MySocketException extends SocketTimeoutException { private static final
- * long serialVersionUID = -1205821723257911821L; private int mutex;
- * 
- * public MySocketException()) { super(); }
- * 
- * }
- */
