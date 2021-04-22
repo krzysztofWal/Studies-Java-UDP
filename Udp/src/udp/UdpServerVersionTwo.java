@@ -24,7 +24,7 @@ public class UdpServerVersionTwo {
 
 	        while(true) {
 	        	DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-	        //	System.out.println("Waiting for request...");
+	        	System.out.println("Waiting for request...");
 	        	// czekaj na ¿¹danie od klienta
 	        	aSocket.receive(request);
 	        	try {
@@ -58,7 +58,9 @@ public class UdpServerVersionTwo {
 		  	          			request.getAddress(), request.getPort());
 		  	          	aSocket.send(reply); 
 		  	          	if (!objVec.isEmpty()) {
-		  	          	// jeœli znaleziono szukane dane - wyœlij je
+		  	          	// jeœli znaleziono szukane dane
+	        				System.out.println("Server: Sending list and found data matching your requiry");
+	        				// wyœlij znalezione dane
 	        				byte[] data = Tools.serialize(objVec);
 	        				DatagramPacket dataPack = new DatagramPacket(data, data.length, 
 			  	          			request.getAddress(), request.getPort());
@@ -89,49 +91,3 @@ public class UdpServerVersionTwo {
 	      
 	    }
 }
-
-class ServerRoutine extends BasicThread {
-	protected static byte[] list = new byte[1024];
-	protected static byte[] data = new byte[2048];
-	protected static DatagramSocket aSocket;
-	protected static Request.Operation readOrWrite;
-	
-	protected ServerRoutine(String threadId) {
-		super(threadId);
-	}
-	
-	protected static void waitAndReceive() throws IOException, ClassNotFoundException {
-		byte[] temp = new byte[1024];
-		DatagramPacket tempPack = new DatagramPacket(temp, temp.length);
-		System.out.println("Nowe wywo³anie waitAndReceive()");
-		
-		
-	}
-	
-	protected static void setSocket(DatagramSocket ds) throws SocketException{
-		aSocket = ds;
-	}
-	
-}
-
- class ServerSaveRoutine extends ServerRoutine {
-	public ServerSaveRoutine(String threadId) {
-		super(threadId);
-	}
-	
-	@Override
-	public void run() {
-		
-	}
- }
- 
- class ServerReadRoutine extends ServerRoutine {
-	 public ServerReadRoutine(String threadId) {
-		 super(threadId);
-	 }
-	 
-	@Override
-	public void run() {
-		
-	}
- }

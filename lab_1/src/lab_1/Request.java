@@ -37,11 +37,7 @@ public class Request extends Packet{
 		return obj;
 	}
 	
-	public static Class<Request> getTypeOfClass() {
-		//Packet.class;
-		return Request.class;
-	}
-	
+
 	/*
 	public void setTypeOfRequest(Operation type) {
 		this.type = type;
