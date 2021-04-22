@@ -21,7 +21,7 @@ public class UdpServerVersionTwo {
 	    	aSocket = new DatagramSocket(9876);
 	        System.out.println(aSocket.getLocalAddress());
 	        byte[] buffer = new byte[1024];
-
+	  
 	        while(true) {
 	        	DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 	        	System.out.println("Waiting for request...");
@@ -73,7 +73,12 @@ public class UdpServerVersionTwo {
 	        			String name = read.getDevice().replaceAll("\\s","") + read.getDescription().replaceAll("\\s","") + read.getDate();
 	        			System.out.println(name);
 	        			Files.write(new File(name).toPath(), request.getData());
+	        			byte[] conf = Tools.serialize(Boolean.valueOf(true));
+	        			DatagramPacket confirmPack = new DatagramPacket(conf, conf.length, request.getAddress(), request.getPort());
+	        			aSocket.send(confirmPack);
 		          }
+	        		
+	       
 	         // nast¹pi³ b³¹d przy odbiorze danych, serializacji lub deserializacji
 		      } catch (ClassNotFoundException ex) {
 					Logger.getLogger(UdpClient.class.getName()).log(Level.FINEST, null, ex);

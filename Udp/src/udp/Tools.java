@@ -19,7 +19,6 @@ import lab_1.Request;
 
 public class Tools {
 	
-	
 	static class Pair {
 		private String alphanumerals;
 		private long number;
@@ -104,8 +103,6 @@ public class Tools {
 		
 		cal.set(Calendar.MILLISECOND, 0);
 
-//		System.out.println(cal.getTimeInMillis());
-
 		return cal.getTimeInMillis();
 		
 	}
@@ -166,71 +163,31 @@ public class Tools {
 		if (listOfFiles != null) {
   		  for (File el : listOfFiles) {
   			  // tylko pliki
-  			  
   			  if (el.isFile()) {
-  				  
   				  //obiekt zawierajacy timestamp z nazwy pliku oraz pozostala jej czesc
-  				  Tools.Pair dividedName = Tools.getNumberAndName(el.getName().toLowerCase().toCharArray());		  
-  				
+  				  Tools.Pair dividedName = Tools.getNumberAndName(el.getName().toLowerCase().toCharArray());
   				  if(dividedName.getNames().equals(searchName)) {
   					  // jeœli czesc bez timestampu sie zgadza
   					  //System.out.println("Name is corect");
-  					  	
   					  if (req.getEndingDate() == 0) {
   						   //jesli nie podany jest przedzial
-  					  		  
   						  if (dividedName.getNumber() == req.getDate()) {
   					  		  //System.out.println("Znaleziono poszukiwane dane");
   					  		  temp.add(el);
-  					  	  } //else {
-  					  		 // System.out.println("Nie znaleziono poszukiwnaych danych");
-  					  	 // }
-  						  
+  					  	  } 
   					  } else {
   						  //jest podany przedzia³
-  						  
   						  if (dividedName.getNumber() >= req.getDate() && dividedName.getNumber() <= req.getEndingDate()) {
-  						//	  System.out.println("Znaleziono poszukiwane dane");
+
   							  temp.add(el);
-  						  } //else {
-  						//	  System.out.println("Nie znaleziono poszukiwanych danych");
-  						//  }
-  						  
+  						  } 
   					  }
-  					  
-  				  } //else {
-  					//  System.out.println("Nie znaleziono szukanych danych");
-  				 // }
+  				  } 
   			  }
   		  }
-  	  } //else {
-  		 // System.out.println("Nie znaleziono szukanych danych");
-  	  //}
-		
+  	  } 
 		return temp;
 		
 	}
-	/*
-	public static void main(String[] args) {
-		try {
-			Request rq = new Request(Request.Operation.READ, "First device", "First description", Tools.toTimestamp(0,0,0,1,Calendar.JUNE, 2019), 
-		 		Tools.toTimestamp(0, 0, 0, 2, Calendar.APRIL, 2020));
-			byte[] data = Tools.serialize(rq);
-			String name = rq.getDevice().replaceAll("\\s","") + rq.getDescription().replaceAll("\\s","") + rq.getDate();
-	  	  	System.out.println(name);
-	  	  	File f = new File(name);
-	  	  	Files.write(f.toPath(), data);
-		
-			File in = new File("FirstdeviceFirstdescription1590962400000");
-			byte[] buf = Files.readAllBytes(in.toPath());
-			Request obj = (Request)deserialize(buf);
-			
-			System.out.println(obj.getDate());
-			
-		} catch (Exception ex) {
-			System.out.println(ex.getClass());
-			ex.printStackTrace();
-		}
-	}
-	*/
+
 }

@@ -37,16 +37,10 @@ public class Request extends Packet{
 		return obj;
 	}
 	
+	public void makeWriteRequest() {
+		this.type = Operation.WRITE;
+	}
 
-	/*
-	public void setTypeOfRequest(Operation type) {
-		this.type = type;
-	}
-	
-	public void setEndingDateOfRequest(long endingDate) {
-		this.endingDate = endingDate;
-	}
-	*/
 	public Operation getType() {
 		return type;
 	}

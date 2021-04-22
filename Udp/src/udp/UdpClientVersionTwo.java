@@ -11,6 +11,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lab_1.Request;
+import lab_1.TimeHistory;
 
 public class UdpClientVersionTwo {
 	@SuppressWarnings("unchecked")
@@ -31,9 +32,32 @@ public class UdpClientVersionTwo {
 			aSocket = new DatagramSocket();
 			
 			//wys³anie ¿¹dania
-			Request rq = Request.newReadRequest("First device", "First description", Tools.toTimestamp(0,0,0,1,Calendar.JUNE, 2019));
-		 	byte[] data = Tools.serialize(rq);
-			DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
+	
+			Request rq = Request.newReadRequest("SecondDevice", 
+					"Description", 
+					Tools.toTimestamp(0,0,0,1,Calendar.JUNE, 2019),
+					Tools.toTimestamp(0,0,0,5,Calendar.JUNE, 2019)
+					);
+		
+		/*
+			Double[] doubleData = {1.3, 1.4, 1.5, 1.4, 1.3};
+			
+			Request rq = new TimeHistory("SecondDevice", 
+					"Description", 
+					Tools.toTimestamp(0, 0, 0, 1, Calendar.JUNE, 2019),
+					1,
+					"Volts",
+					0.3,
+					doubleData,
+					0.5
+					);
+		
+			// zadanie zapisu przesylanych danych
+			rq.makeWriteRequest();
+		*/
+			byte[] data = Tools.serialize(rq);
+					 	
+		 	DatagramPacket toSend = new DatagramPacket(data, data.length, aHost, serverPort);
 			aSocket.send(toSend);
 			System.out.println("Klient: Wys³ano pakiet");
 			//oczekiwanie na odpowiedz
@@ -58,6 +82,11 @@ public class UdpClientVersionTwo {
 						aSocket.receive(receivedPacket);
 						Vector<Request> dataVec = (Vector<Request>) Tools.deserialize(buffer2);
 						System.out.println("Klient: Iloœæ pomiarów, z których otrzymano dane: " + dataVec.size());
+						//wyswietl dane
+						for (Request el : dataVec) {
+							System.out.println(el);
+						}
+						
 					} else {
 						//lista jest pusta
 						System.out.println("Klient: Nie znaleziono szukanych danych");
